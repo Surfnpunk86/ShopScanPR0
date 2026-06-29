@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: shopscan-pro
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: PAGESPEED_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AGENCY_NAME
+        value: LaFête América
+      - key: AGENCY_COLOR
+        value: "#1a1a2e"
+      - key: AGENCY_WEBSITE
+        value: https://lafeteamerica.com
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 50

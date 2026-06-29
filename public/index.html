@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShopScan Pro — Diagnóstico & Optimización</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f0f14;--ink2:#1e1e2e;--surface:#fff;--bg:#f5f6fa;
+  --border:#e8eaf0;--text:#1a1a2a;--muted:#6b7280;--faint:#9ca3af;
+  --red:#e94560;--purple:#7c3aed;--green:#10b981;--amber:#f59e0b;
+  --blue:#3b82f6;--orange:#f97316;
+  --r:10px;--r-sm:6px;
+  --accent:#e94560;--accent-soft:#fce7eb;
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;
+  --paper:#f5f6fa;--gradient:linear-gradient(135deg,#e94560 0%,#7c3aed 100%);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;background:rgba(15,15,20,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+.hdr{display:flex;align-items:center;justify-content:space-between;height:58px;max-width:1200px;margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:30px;height:30px;background:var(--red);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.logo-name{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.4px}
+.logo-name span{color:var(--red)}
+.hdr-nav{display:flex;gap:24px;align-items:center}
+.hdr-nav a{font-size:13px;color:rgba(255,255,255,.45);font-weight:500;transition:color .2s}
+.hdr-nav a:hover{color:#fff}
+.hdr-cta{background:var(--red);color:#fff;font-size:13px;font-weight:600;padding:7px 16px;border-radius:var(--r-sm);transition:opacity .2s}
+.hdr-cta:hover{opacity:.88}
+
+/* HERO */
+.hero{background:var(--ink);padding:52px 24px 60px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-120px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 65%);pointer-events:none;overflow:hidden}
+.hero-inner{max-width:900px;margin:0 auto;text-align:center;position:relative}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(233,69,96,.12);border:1px solid rgba(233,69,96,.25);color:#f9a8b8;font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:24px;letter-spacing:.04em;text-transform:uppercase}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--red);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto 16px;line-height:1.7}
+.url-bar{display:flex;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);max-width:560px;margin:0 auto;transition:border-color .2s}
+.url-bar:focus-within{border-color:rgba(233,69,96,.5)}
+.url-pfx{padding:0 12px 0 18px;font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,.25);white-space:nowrap}
+.url-bar input{flex:1;background:none;border:none;outline:none;font-size:15px;color:#fff;font-family:'Inter',sans-serif;padding:14px 0}
+.url-bar input::placeholder{color:rgba(255,255,255,.25)}
+.btn-scan{margin:6px;padding:10px 22px;background:var(--red);color:#fff;font-size:14px;font-weight:600;border:none;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:background .2s}
+.btn-scan:hover{background:#d6304c}
+.hero-meta{margin-top:16px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.hero-meta-i{font-size:12px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px}
+.hero-meta-i::before{content:'✓';color:var(--green)}
+
+/* STRIP */
+.strip{background:var(--ink2);padding:16px 24px;border-top:1px solid rgba(255,255,255,.04)}
+.strip-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:28px;overflow-x:auto}
+.strip-lbl{font-size:11px;font-weight:600;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.strip-platforms{display:flex;gap:20px}
+.strip-p{font-size:13px;color:rgba(255,255,255,.35);white-space:nowrap}
+
+/* METRICS */
+.metrics-bar{background:#fff;border-bottom:1px solid var(--border)}
+.metrics-inner{max-width:1200px;margin:0 auto;display:flex}
+.metric{flex:1;padding:20px 24px;border-right:1px solid var(--border)}
+.metric:last-child{border-right:none}
+.metric-num{font-size:22px;font-weight:700;color:var(--ink)}
+.metric-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* SCORE RESULTS */
+.results-section{max-width:1200px;margin:0 auto;padding:32px 24px}
+.results-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:14px}
+.results-title h2{font-size:22px;font-weight:700}
+.results-url{font-size:13px;color:var(--muted);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.results-platform{display:inline-flex;align-items:center;gap:5px;background:#d1fae5;border:1px solid #a7f3d0;color:#065f46;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;margin-top:6px}
+.results-btns{display:flex;gap:10px}
+.btn-pdf{background:#fff;border:1px solid var(--border);padding:9px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-new{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* GAUGE SCORE HERO */
+.score-hero{background:var(--ink);border-radius:var(--r);padding:28px 32px;margin-bottom:20px;display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.gauge-wrap{position:relative;width:130px;height:130px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.gauge-inner{position:absolute;text-align:center}
+.gauge-num{font-size:36px;font-weight:800;line-height:1;font-family:'JetBrains Mono',monospace}
+.gauge-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+.score-div{width:1px;height:80px;background:rgba(255,255,255,.08);flex-shrink:0}
+.score-info{flex:1;min-width:0}
+.score-level{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.score-summary{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7}
+.score-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.sbadge{font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px}
+
+/* MODULE CARDS */
+.mods-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.mod-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;text-align:center;border-top:3px solid var(--border)}
+.mod-num{font-size:30px;font-weight:700;line-height:1;font-family:'JetBrains Mono',monospace}
+.mod-lbl{font-size:11px;color:var(--muted);margin-top:6px}
+.mod-bar{height:3px;background:var(--border);border-radius:3px;margin-top:10px;overflow:hidden}
+.mod-fill{height:100%;border-radius:3px}
+
+/* TABS */
+.tabs-wrap{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab-btn{padding:11px 20px;background:none;border:none;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .15s}
+.tab-btn.on{color:var(--red);border-bottom-color:var(--red)}
+.tab-panel{display:none}.tab-panel.on{display:block}
+.chk-group{margin-bottom:22px}
+.chk-group-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.chk-list{display:flex;flex-direction:column;gap:8px}
+.chk{background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;border-left:3px solid var(--border)}
+.chk.pass{border-left-color:var(--green)}.chk.fail{border-left-color:var(--red)}.chk.warn{border-left-color:var(--amber)}
+.chk-ico{font-size:15px;flex-shrink:0;margin-top:1px}
+.chk-body{flex:1}.chk-title{font-size:13px;font-weight:600}.chk-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5}
+.imp{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;flex-shrink:0;margin-top:2px}
+.imp-alto{background:#fee2e2;color:#dc2626}.imp-medio{background:#fef3c7;color:#d97706}.imp-bajo{background:#d1fae5;color:#059669}
+.vitals{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:22px}
+.vital{background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 12px;text-align:center}
+.vital-val{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.vital-name{font-size:10px;color:var(--muted);margin-top:4px}
+.vital-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px;display:inline-block;text-transform:uppercase}
+.v-good{background:#d1fae5;color:#065f46}.v-warn{background:#fef3c7;color:#92400e}.v-bad{background:#fee2e2;color:#991b1b}
+.actions{display:flex;flex-direction:column;gap:12px}
+.action{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;display:flex;gap:14px}
+.action-n{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.action-body{flex:1}.action-title{font-size:14px;font-weight:600;margin-bottom:5px}
+.action-tags{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.action-desc{font-size:13px;color:var(--muted);line-height:1.55}
+.action-impact{font-size:12px;color:var(--blue);font-weight:500;margin-top:5px}
+.quick-wins{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:var(--r);padding:16px 20px;margin-top:20px}
+.qw-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px}
+.qw-item{font-size:13px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.04);display:flex;gap:8px}
+.qw-item:last-child{border-bottom:none}
+.qw-item::before{content:'⚡'}
+
+/* OPTIMIZER APP */
+.app{max-width:1200px;margin:0 auto;padding:24px 24px;display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+.sidebar{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:sticky;top:74px}
+.sidebar-head{padding:18px 20px;border-bottom:1px solid var(--border)}
+.sh-title{font-size:13px;font-weight:700;color:var(--text)}
+.sh-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.sidebar-nav{padding:8px 0}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.nav-item:hover{background:var(--bg)}
+.nav-item.active{background:#fef2f4;border-left-color:var(--red)}
+.nav-item.active .nt-name{color:var(--red);font-weight:600}
+.nav-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center}
+.nav-text{flex:1;min-width:0}
+.nt-name{font-size:13px;font-weight:500;color:var(--text);display:block}
+.nt-desc{font-size:11px;color:var(--muted)}
+.nav-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;flex-shrink:0;white-space:nowrap}
+.nav-badge.key{background:#fce7eb;color:var(--red)}
+.nav-badge.pending{background:#fef3c7;color:#d97706}
+.nav-badge.done{background:#d1fae5;color:#059669}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.overall-score-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.osb-label{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);font-weight:600}
+.osb-track{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden}
+.osb-fill{height:100%;background:var(--red);border-radius:5px;transition:width .5s ease}
+.osb-val{font-size:11px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace}
+.content-area{display:flex;flex-direction:column;gap:0}
+.btn-apply-all{width:100%;padding:11px;background:var(--ink);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s;margin-top:12px}
+.btn-apply-all:hover{background:var(--ink2)}
+
+/* PANELS */
+.optimizer-panel{display:none;animation:fadeIn .2s ease}
+.optimizer-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.panel-header{background:#fff;border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;padding:24px 28px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.ph-left h2{font-size:20px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.ph-left p{font-size:14px;color:var(--muted);max-width:500px;line-height:1.6}
+.ph-score{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.ps-num{font-family:'JetBrains Mono',monospace;font-size:36px;line-height:1;color:var(--ink)}
+.ps-label{font-size:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.ps-tag{font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:10px}
+.progress-strip{background:rgba(233,69,96,.04);border-left:1px solid var(--border);border-right:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;gap:8px}
+.ps-step{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.ps-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.ps-step.done .ps-dot{background:var(--green)}
+.ps-step.done{color:var(--green)}
+.ps-step.active-s .ps-dot{background:var(--red)}
+.ps-step.active-s{color:var(--red);font-weight:600}
+.ps-arrow{color:var(--border);font-size:14px}
+.panel-body{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);padding:20px 28px;display:flex;flex-direction:column;gap:12px}
+
+/* OPT GROUPS */
+.opt-group{border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.og-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:#fff;transition:background .15s;user-select:none}
+.og-header:hover{background:var(--bg)}
+.og-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.og-info{flex:1;min-width:0}
+.ogi-title{font-size:13px;font-weight:600;color:var(--text)}
+.ogi-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.og-impact{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap}
+.og-impact.high{background:#fee2e2;color:#dc2626}
+.og-impact.med{background:#fef3c7;color:#d97706}
+.og-toggle-btn{padding:6px 14px;border-radius:var(--r-sm);font-size:12px;font-weight:600;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;white-space:nowrap}
+.og-toggle-btn.enabled{background:var(--green);color:#fff;border-color:var(--green)}
+.og-expand{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.og-expand.open{max-height:3000px}
+.og-body{padding:16px 20px;background:var(--bg);border-top:1px solid var(--border)}
+.og-body p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px}
+.impact-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.impact-stat{background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 16px;text-align:center;min-width:90px}
+.is-val{font-size:18px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace}
+.is-label{font-size:10px;color:var(--muted);margin-top:3px}
+.platform-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.pt-btn{padding:5px 14px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;color:var(--muted)}
+.pt-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.platform-code{display:none}
+.platform-code.active{display:block}
+.code-block{border-radius:var(--r-sm);overflow:hidden;margin-bottom:10px}
+.code-bar{display:flex;align-items:center;justify-content:space-between;background:#1e293b;padding:8px 14px}
+.cb-title{font-size:11px;color:#94a3b8;font-family:'JetBrains Mono',monospace}
+.cb-copy{font-size:11px;color:#64748b;cursor:pointer;padding:2px 8px;border-radius:4px;transition:all .15s;font-family:'Inter',sans-serif;background:rgba(255,255,255,.06)}
+.cb-copy:hover{color:#fff;background:rgba(255,255,255,.12)}
+.cb-copy.copied{color:var(--green)}
+.code-pre{background:#0f172a;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;overflow-x:auto;white-space:pre}
+.c-comment{color:#475569}.c-tag{color:#7dd3fc}.c-attr{color:#93c5fd}.c-val{color:#86efac}.c-str{color:#fda4af}
+.btn-ai-explain{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#f0f0ff;border:1px solid #c7d2fe;border-radius:var(--r-sm);font-size:12px;font-weight:600;color:var(--purple);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:10px}
+.btn-ai-explain:hover{background:#e0e7ff}
+.ai-explain-box{background:linear-gradient(135deg,#f0f0ff,#f0fdf4);border:1px solid #c7d2fe;border-radius:var(--r-sm);padding:14px 16px;margin-top:10px;font-size:13px;color:var(--text);line-height:1.7;display:none}
+.ai-explain-box.open{display:block}
+.aeb-loading{color:var(--purple);font-style:italic}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all .15s}
+.cl-item:hover{background:var(--bg)}
+.cl-item.checked{background:#f0fdf4;border-color:#a7f3d0}
+.cl-checkbox{width:18px;height:18px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green);margin-top:1px;transition:all .15s}
+.cl-item.checked .cl-checkbox{background:var(--green);border-color:var(--green);color:#fff;font-size:11px}
+
+/* FEATURES */
+.features{padding:52px 24px;background:#fff}
+.features-inner{max-width:1200px;margin:0 auto}
+.section-hed{text-align:center;margin-bottom:44px}
+.section-hed h2{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.3px;margin-bottom:8px}
+.section-hed p{font-size:15px;color:#4b5563}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:box-shadow .2s,transform .2s}
+.feat-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-2px)}
+.feat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.feat-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
+.feat-card p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.feat-list{list-style:none}
+.feat-list li{font-size:12px;color:var(--muted);padding:3px 0}
+.feat-list li::before{content:'✓ ';color:var(--green);font-weight:700}
+
+/* HOW */
+.how{background:var(--ink);padding:52px 24px}
+.how-inner{max-width:1200px;margin:0 auto}
+.how-inner h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:8px}
+.how-sub{font-size:15px;color:rgba(255,255,255,.4);margin-bottom:40px}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.how-step{padding:16px}
+.how-num{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(233,69,96,.4);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin-bottom:14px}
+.how-step h3{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px}
+.how-step p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6}
+
+/* FOOTER */
+footer{background:#0a0a12;padding:28px 24px}
+.foot{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.foot-agency{font-size:12px;color:rgba(255,255,255,.25);margin-top:3px}
+.foot-links{display:flex;gap:20px}
+.foot-links a{font-size:12px;color:rgba(255,255,255,.3);transition:color .2s}
+.foot-links a:hover{color:var(--red)}
+
+/* ── TABLET (≤900px) ── */
+@media(max-width:900px){
+  /* Optimizer sidebar → horizontal scroll strip */
+  .app{grid-template-columns:1fr;padding:20px 16px;gap:16px}
+  .sidebar{position:static;border-radius:var(--r)}
+  .sidebar-head{padding:14px 16px}
+  .sidebar-nav{display:flex;overflow-x:auto;padding:6px 8px;gap:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .sidebar-nav::-webkit-scrollbar{display:none}
+  .nav-item{flex-direction:column;text-align:center;min-width:64px;max-width:72px;border-left:none;border-bottom:2px solid transparent;gap:2px;padding:8px 6px;border-radius:var(--r-sm)}
+  .nav-item.active{border-bottom-color:var(--red);border-left:none;background:#fef2f4}
+  .nt-desc,.nav-badge{display:none}
+  .nav-icon{font-size:20px;width:auto}
+  .nt-name{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px}
+  .sidebar-footer{padding:12px 16px}
+
+  /* Panels */
+  .panel-header{padding:16px 18px;flex-direction:column;gap:12px}
+  .panel-body{padding:14px 16px}
+  .progress-strip{padding:10px 16px;gap:6px;font-size:11px}
+  .ps-arrow{font-size:11px}
+
+  /* Results */
+  .results-section{padding:20px 16px}
+  .mods-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+
+  /* Features & How */
+  .features{padding:40px 16px}
+  .how{padding:40px 16px}
+  .feat-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .how-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+}
+
+/* ── MOBILE (≤640px) ── */
+@media(max-width:640px){
+  /* Header */
+  .hdr-nav{display:none}
+  .hdr{padding:0 16px}
+
+  /* Hero */
+  .hero{padding:36px 16px 44px}
+  .hero-eyebrow{font-size:11px;padding:4px 12px;margin-bottom:16px}
+  .hero h1{font-size:28px;margin-bottom:12px}
+  .hero-sub{font-size:15px;margin-bottom:20px}
+  .url-bar{border-radius:var(--r-sm)}
+  .url-pfx{display:none}
+  .url-bar input{padding:12px 14px;font-size:14px}
+  .btn-scan{padding:10px 16px;font-size:13px}
+  .hero-meta{gap:10px;margin-top:14px}
+  .hero-meta-i{font-size:11px}
+
+  /* Strip */
+  .strip{padding:12px 16px}
+  .strip-lbl{display:none}
+
+  /* Metrics → 2×2 grid */
+  .metrics-inner{display:grid;grid-template-columns:1fr 1fr}
+  .metric{padding:14px 16px;border-right:none;border-bottom:1px solid var(--border)}
+  .metric:nth-child(odd){border-right:1px solid var(--border)}
+  .metric:nth-child(3),.metric:nth-child(4){border-bottom:none}
+  .metric-num{font-size:18px}
+  .metric-lbl{font-size:11px}
+
+  /* Results */
+  .results-section{padding:16px 14px}
+  .results-header{flex-direction:column;gap:10px;margin-bottom:16px}
+  .results-title h2{font-size:18px}
+  .results-btns{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .btn-pdf,.btn-new{text-align:center;padding:9px 10px;font-size:12px}
+
+  /* Score hero → stacked */
+  .score-hero{flex-direction:column;text-align:center;padding:20px 16px;gap:16px}
+  .score-div{display:none}
+  .gauge-wrap{width:110px;height:110px}
+  .gauge-num{font-size:30px}
+  .score-info{min-width:0;width:100%}
+  .score-level{font-size:16px}
+  .score-summary{font-size:13px}
+  .score-badges{justify-content:center}
+
+  /* Module cards → 2 cols */
+  .mods-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+  .mod-card{padding:12px 10px}
+  .mod-num{font-size:24px}
+  .mod-lbl{font-size:10px}
+
+  /* Tabs */
+  .tabs-wrap{gap:0}
+  .tab-btn{padding:9px 12px;font-size:12px}
+
+  /* Checks */
+  .chk{padding:10px 12px;gap:8px}
+  .chk-title{font-size:12px}
+  .chk-desc{font-size:11px}
+  .imp{display:none}
+
+  /* Vitals → 3 cols */
+  .vitals{grid-template-columns:repeat(3,1fr);gap:8px}
+  .vital{padding:10px 8px}
+  .vital-val{font-size:16px}
+  .vital-name{font-size:9px}
+
+  /* Actions */
+  .action{padding:14px 14px;gap:10px}
+  .action-title{font-size:13px}
+  .action-desc{font-size:12px}
+  .action-tags{display:none}
+
+  /* Optimizer panels */
+  .app{padding:16px 14px;gap:12px}
+  .panel-header{padding:14px 14px}
+  .ph-left h2{font-size:16px}
+  .ph-left p{font-size:13px}
+  .ph-score{display:none}
+  .progress-strip{display:none}
+  .panel-body{padding:12px 14px;gap:10px}
+  .og-header{padding:12px 12px;gap:8px}
+  .ogi-title{font-size:12px}
+  .ogi-sub{display:none}
+  .og-impact{display:none}
+  .og-toggle-btn{padding:5px 10px;font-size:11px}
+  .og-body{padding:12px 14px}
+  .og-body p{font-size:12px}
+  .impact-row{gap:8px}
+  .impact-stat{padding:8px 10px;min-width:70px}
+  .is-val{font-size:15px}
+  .platform-tabs{gap:4px}
+  .pt-btn{padding:4px 10px;font-size:11px}
+  .code-pre{font-size:11px;padding:10px 12px}
+  .btn-ai-explain{font-size:11px;padding:6px 10px}
+
+  /* Features */
+  .features{padding:32px 14px}
+  .section-hed h2{font-size:22px}
+  .section-hed p{font-size:14px}
+  .feat-grid{grid-template-columns:1fr;gap:12px}
+  .feat-card{padding:18px}
+
+  /* How */
+  .how{padding:32px 14px}
+  .how-inner h2{font-size:22px}
+  .how-sub{font-size:14px;margin-bottom:28px}
+  .how-grid{grid-template-columns:1fr;gap:12px}
+  .how-step{padding:0}
+
+  /* Footer */
+  footer{padding:20px 16px}
+  .foot{flex-direction:column;gap:16px;align-items:flex-start}
+  .foot-links{flex-wrap:wrap;gap:14px}
+}
+
+/* ── SMALL MOBILE (≤380px) ── */
+@media(max-width:380px){
+  .hero h1{font-size:24px}
+  .mods-grid{grid-template-columns:1fr 1fr}
+  .vitals{grid-template-columns:repeat(3,1fr)}
+  .tab-btn{padding:8px 10px;font-size:11px}
+  .url-bar input{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-mark">📊</div>
+      <div class="logo-name">ShopScan<span>Pro</span></div>
+    </div>
+    <nav class="hdr-nav">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#optimizador">Optimizador</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#diagnostico" class="hdr-cta">Analizar tienda →</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="diagnostico">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Diagnóstico + Optimización gratuita</div>
+    <h1>No solo diagnosticamos.<br/><em>Lo resolvemos.</em></h1>
+    <p class="hero-sub">Análisis completo de Performance, SEO, CRO y Paid Media. Con el código listo para implementar en tu plataforma. Sin plugins. Sin misterios.</p>
+    <div class="url-bar">
+      <span class="url-pfx">https://</span>
+      <input type="text" id="urlInput" placeholder="mitienda.com"/>
+      <button class="btn-scan" onclick="runDemo()">Analizar →</button>
+    </div>
+    <div class="hero-meta">
+      <span class="hero-meta-i">Shopify, WooCommerce, VTEX, Tienda Nube</span>
+      <span class="hero-meta-i">50+ factores analizados</span>
+      <span class="hero-meta-i">Código listo por plataforma</span>
+      <span class="hero-meta-i">IA integrada</span>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-inner">
+    <span class="strip-lbl">Compatible con</span>
+    <div class="strip-platforms">
+      <span class="strip-p">🛍️ Shopify</span>
+      <span class="strip-p">🛒 WooCommerce</span>
+      <span class="strip-p">🔷 VTEX</span>
+      <span class="strip-p">☁️ Tienda Nube</span>
+      <span class="strip-p">🟠 Magento</span>
+      <span class="strip-p">🌐 Nginx/Apache</span>
+      <span class="strip-p">☁️ Cloudflare</span>
+    </div>
+  </div>
+</div>
+
+<div class="metrics-bar">
+  <div class="metrics-inner">
+    <div class="metric"><div class="metric-num">50+</div><div class="metric-lbl">Factores analizados</div></div>
+    <div class="metric"><div class="metric-num">8</div><div class="metric-lbl">Módulos de optimización</div></div>
+    <div class="metric"><div class="metric-num">~60s</div><div class="metric-lbl">Tiempo de análisis</div></div>
+    <div class="metric"><div class="metric-num">PDF</div><div class="metric-lbl">Reporte white-label</div></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<section class="results-section" id="resultados">
+  <div class="results-header">
+    <div class="results-title">
+      <h2>Resultado del Diagnóstico</h2>
+      <div class="results-url">ejemplo-tienda.myshopify.com</div>
+      <div class="results-platform">🛍️ Shopify — Alta confianza</div>
+    </div>
+    <div class="results-btns">
+      <button class="btn-pdf">⬇ Descargar PDF</button>
+      <button class="btn-new">+ Nuevo análisis</button>
+    </div>
+  </div>
+
+  <div class="score-hero">
+    <div class="gauge-wrap">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="11"/>
+        <circle id="gaugeRing" cx="65" cy="65" r="52" fill="none" stroke="#f59e0b" stroke-width="11"
+          stroke-linecap="round" stroke-dasharray="0 327" transform="rotate(-90 65 65)"
+          style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+      </svg>
+      <div class="gauge-inner">
+        <div class="gauge-num" style="color:#f59e0b">62</div>
+        <div class="gauge-lbl">SCORE</div>
+      </div>
+    </div>
+    <div class="score-div"></div>
+    <div class="score-info">
+      <div class="score-level">Regular — Oportunidades claras de mejora</div>
+      <div class="score-summary">La tienda tiene base sólida pero pierde ventas por lentitud móvil y tracking incompleto. Las mejoras de mayor impacto están en velocidad y Meta Pixel.</div>
+      <div class="score-badges">
+        <span class="sbadge" style="background:rgba(233,69,96,.15);color:#f9a8b8">⚡ Velocidad móvil crítica</span>
+        <span class="sbadge" style="background:rgba(245,158,11,.15);color:#fcd34d">⚠ Meta Pixel sin eventos</span>
+        <span class="sbadge" style="background:rgba(16,185,129,.15);color:#6ee7b7">✓ SEO bien configurado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mods-grid">
+    <div class="mod-card" style="border-top-color:#f97316"><div class="mod-num" style="color:#f97316">48</div><div class="mod-lbl">📱 Performance Móvil</div><div class="mod-bar"><div class="mod-fill" style="width:48%;background:#f97316"></div></div></div>
+    <div class="mod-card" style="border-top-color:#3b82f6"><div class="mod-num" style="color:#3b82f6">77</div><div class="mod-lbl">💻 Desktop</div><div class="mod-bar"><div class="mod-fill" style="width:77%;background:#3b82f6"></div></div></div>
+    <div class="mod-card" style="border-top-color:#10b981"><div class="mod-num" style="color:#10b981">82</div><div class="mod-lbl">🔍 SEO</div><div class="mod-bar"><div class="mod-fill" style="width:82%;background:#10b981"></div></div></div>
+    <div class="mod-card" style="border-top-color:#f59e0b"><div class="mod-num" style="color:#f59e0b">60</div><div class="mod-lbl">🎯 CRO</div><div class="mod-bar"><div class="mod-fill" style="width:60%;background:#f59e0b"></div></div></div>
+    <div class="mod-card" style="border-top-color:#e94560"><div class="mod-num" style="color:#e94560">43</div><div class="mod-lbl">📢 Paid Media</div><div class="mod-bar"><div class="mod-fill" style="width:43%;background:#e94560"></div></div></div>
+  </div>
+
+  <div class="tabs-wrap">
+    <button class="tab-btn on" onclick="showTab('perf',this)">⚡ Performance</button>
+    <button class="tab-btn" onclick="showTab('seo',this)">🔍 SEO</button>
+    <button class="tab-btn" onclick="showTab('cro',this)">🎯 CRO</button>
+    <button class="tab-btn" onclick="showTab('paid',this)">📢 Paid Media</button>
+    <button class="tab-btn" onclick="showTab('plan',this)">🗺 Plan de Acción</button>
+  </div>
+
+  <div id="tab-perf" class="tab-panel on">
+    <div class="vitals">
+      <div class="vital"><div class="vital-val" style="color:#ef4444">4.8s</div><div class="vital-name">LCP</div><div class="vital-tag v-bad">Crítico</div></div>
+      <div class="vital"><div class="vital-val" style="color:#10b981">0.09</div><div class="vital-name">CLS</div><div class="vital-tag v-good">Bueno</div></div>
+      <div class="vital"><div class="vital-val" style="color:#f59e0b">180ms</div><div class="vital-name">FID</div><div class="vital-tag v-warn">Mejorar</div></div>
+      <div class="vital"><div class="vital-val" style="color:#f59e0b">2.1s</div><div class="vital-name">FCP</div><div class="vital-tag v-warn">Mejorar</div></div>
+      <div class="vital"><div class="vital-val" style="color:#10b981">340ms</div><div class="vital-name">TTFB</div><div class="vital-tag v-good">Bueno</div></div>
+    </div>
+    <div class="chk-group"><div class="chk-group-title">Oportunidades detectadas</div><div class="chk-list">
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">Imágenes sin optimizar (WebP)</div><div class="chk-desc">14 imágenes en JPEG/PNG. Convertir a WebP reduciría el peso ~1.2 MB.</div></div><span class="imp imp-alto">Alto</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">JavaScript bloqueando el render</div><div class="chk-desc">3 scripts de terceros sin defer. Diferirlos mejoraría LCP en ~1.5s.</div></div><span class="imp imp-alto">Alto</span></div>
+      <div class="chk warn"><div class="chk-ico">⚠️</div><div class="chk-body"><div class="chk-title">CSS no usado (~45KB)</div><div class="chk-desc">CSS innecesario cargando en el head. Considerar purga o carga diferida.</div></div><span class="imp imp-medio">Medio</span></div>
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Compresión Gzip activa</div><div class="chk-desc">HTML/CSS/JS se transfieren comprimidos correctamente.</div></div><span class="imp imp-bajo">OK</span></div>
+    </div></div>
+  </div>
+  <div id="tab-seo" class="tab-panel">
+    <div class="chk-group"><div class="chk-group-title">Meta Tags & Estructura</div><div class="chk-list">
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Meta Title — 52 caracteres</div><div class="chk-desc">Longitud óptima. Incluye keyword principal.</div></div><span class="imp imp-bajo">OK</span></div>
+      <div class="chk warn"><div class="chk-ico">⚠️</div><div class="chk-body"><div class="chk-title">Meta Description — 108 caracteres</div><div class="chk-desc">Corta (óptimo: 120–160). Ampliar con keywords de cola larga.</div></div><span class="imp imp-medio">Mejorar</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">8 imágenes sin atributo Alt</div><div class="chk-desc">Sin alt text no son indexadas por Google ni accesibles.</div></div><span class="imp imp-medio">Medio</span></div>
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Schema.org Product detectado</div><div class="chk-desc">Rich snippets activos: precio y rating visibles en Google.</div></div><span class="imp imp-bajo">OK</span></div>
+      <div class="chk warn"><div class="chk-ico">⚠️</div><div class="chk-body"><div class="chk-title">Open Graph sin imagen</div><div class="chk-desc">Publicaciones en redes no mostrarán vista previa visual.</div></div><span class="imp imp-medio">Medio</span></div>
+    </div></div>
+  </div>
+  <div id="tab-cro" class="tab-panel">
+    <div class="chk-group"><div class="chk-group-title">Conversión & Confianza</div><div class="chk-list">
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Botón ATC visible above the fold</div><div class="chk-desc">CTA principal detectado correctamente en móvil.</div></div><span class="imp imp-bajo">OK</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">Sin reviews ni testimonios</div><div class="chk-desc">Tiendas con reviews convierten hasta 270% más. Implementar Judge.me o Loox.</div></div><span class="imp imp-alto">Alto</span></div>
+      <div class="chk warn"><div class="chk-ico">⚠️</div><div class="chk-body"><div class="chk-title">Sin elementos de urgencia</div><div class="chk-desc">Sin countdown ni stock limitado. Un contador puede +20–30% conversiones.</div></div><span class="imp imp-medio">Medio</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">Sin buscador interno</div><div class="chk-desc">Usuarios que buscan convierten 5x más. Es prioridad agregarlo al header.</div></div><span class="imp imp-alto">Alto</span></div>
+    </div></div>
+  </div>
+  <div id="tab-paid" class="tab-panel">
+    <div class="chk-group"><div class="chk-group-title">Meta Ads</div><div class="chk-list">
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Meta Pixel instalado</div><div class="chk-desc">Pixel detectado. ID: 1234567890.</div></div><span class="imp imp-bajo">OK</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">Evento Purchase no detectado</div><div class="chk-desc">Sin Purchase, Meta no puede optimizar hacia conversiones reales. Crítico.</div></div><span class="imp imp-alto">Crítico</span></div>
+    </div></div>
+    <div class="chk-group"><div class="chk-group-title">Google & Otros</div><div class="chk-list">
+      <div class="chk pass"><div class="chk-ico">✅</div><div class="chk-body"><div class="chk-title">Google Analytics 4</div><div class="chk-desc">GA4 con ID G-XXXXXXXXXX correctamente configurado.</div></div><span class="imp imp-bajo">OK</span></div>
+      <div class="chk fail"><div class="chk-ico">❌</div><div class="chk-body"><div class="chk-title">Sin conversiones de Google Ads</div><div class="chk-desc">Sin pixel de Google Ads no puedes optimizar campañas de Shopping.</div></div><span class="imp imp-alto">Alto</span></div>
+      <div class="chk warn"><div class="chk-ico">⚠️</div><div class="chk-body"><div class="chk-title">Sin TikTok Pixel</div><div class="chk-desc">CPMs muy bajos en LATAM en 2025. Vale instalarlo ahora para audiencias.</div></div><span class="imp imp-medio">Medio</span></div>
+    </div></div>
+  </div>
+  <div id="tab-plan" class="tab-panel">
+    <div class="actions">
+      <div class="action"><div class="action-n" style="background:#e94560">1</div><div class="action-body"><div class="action-title">Configurar evento Purchase en Meta Pixel</div><div class="action-tags"><span class="sbadge" style="background:#fee2e2;color:#dc2626">Impacto: Alto</span><span class="sbadge" style="background:#d1fae5;color:#059669">Esfuerzo: Bajo</span></div><div class="action-desc">Sin Purchase, Meta no optimiza hacia compras reales. Instalar en Shopify → Configuración → Píxeles de Meta.</div><div class="action-impact">→ Reducción estimada de CPA del 25–40%</div></div></div>
+      <div class="action"><div class="action-n" style="background:#7c3aed">2</div><div class="action-body"><div class="action-title">Optimizar imágenes a WebP</div><div class="action-tags"><span class="sbadge" style="background:#fee2e2;color:#dc2626">Impacto: Alto</span><span class="sbadge" style="background:#fef3c7;color:#d97706">Esfuerzo: Medio</span></div><div class="action-desc">14 imágenes en JPEG/PNG. LCP pasaría de 4.8s a ~2.8s.</div><div class="action-impact">→ +15–20% en conversión móvil</div></div></div>
+      <div class="action"><div class="action-n" style="background:#3b82f6">3</div><div class="action-body"><div class="action-title">Implementar reviews visibles</div><div class="action-tags"><span class="sbadge" style="background:#fee2e2;color:#dc2626">Impacto: Alto</span><span class="sbadge" style="background:#d1fae5;color:#059669">Esfuerzo: Bajo</span></div><div class="action-desc">Instalar Judge.me gratis y mostrar reseñas en homepage y producto.</div><div class="action-impact">→ +20–30% en confianza del comprador</div></div></div>
+    </div>
+    <div class="quick-wins"><div class="qw-title">Victorias rápidas — menos de 1 hora</div>
+      <div class="qw-item">Comprimir imágenes con TinyPNG.com (sin instalar nada)</div>
+      <div class="qw-item">Verificar Meta Pixel con extensión Meta Pixel Helper (Chrome)</div>
+      <div class="qw-item">Agregar WhatsApp flotante con Floatwhats.app (gratis)</div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTIMIZER -->
+<div class="app" id="optimizador">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="sh-title">Módulos de optimización</div>
+      <div class="sh-sub">8 áreas · Activa según resultado</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-item active" onclick="showPanel('cache')">
+          <div class="nav-icon">⚡</div>
+          <div class="nav-text">
+            <span class="nt-name">Caché & Velocidad</span>
+            <span class="nt-desc">LCP · TTFB · Preload</span>
+          </div>
+          <span class="nav-badge key">+40%</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('images')">
+          <div class="nav-icon">🖼</div>
+          <div class="nav-text">
+            <span class="nt-name">Imágenes</span>
+            <span class="nt-desc">WebP · Lazy Load · LCP</span>
+          </div>
+          <span class="nav-badge key">+30%</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('css-js')">
+          <div class="nav-icon">🧹</div>
+          <div class="nav-text">
+            <span class="nt-name">CSS & JavaScript</span>
+            <span class="nt-desc">Minify · Defer · Unused CSS</span>
+          </div>
+          <span class="nav-badge key">+25%</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('fonts')">
+          <div class="nav-icon">🔤</div>
+          <div class="nav-text">
+            <span class="nt-name">Tipografías</span>
+            <span class="nt-desc">Preload · Self-host · Swap</span>
+          </div>
+          <span class="nav-badge pending">REVISAR</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('cdn')">
+          <div class="nav-icon">🌐</div>
+          <div class="nav-text">
+            <span class="nt-name">CDN & Red global</span>
+            <span class="nt-desc">Cloudflare · DNS · Latencia</span>
+          </div>
+          <span class="nav-badge pending">REVISAR</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('mobile')">
+          <div class="nav-icon">📱</div>
+          <div class="nav-text">
+            <span class="nt-name">Optimización móvil</span>
+            <span class="nt-desc">Viewport · Touch · INP</span>
+          </div>
+          <span class="nav-badge key">+20%</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('seo-tech')">
+          <div class="nav-icon">🔍</div>
+          <div class="nav-text">
+            <span class="nt-name">SEO Técnico</span>
+            <span class="nt-desc">Schema · Meta · Sitemap</span>
+          </div>
+          <span class="nav-badge pending">REVISAR</span>
+        </div>
+        <div class="nav-item" onclick="showPanel('security')">
+          <div class="nav-icon">🔒</div>
+          <div class="nav-text">
+            <span class="nt-name">Seguridad & Headers</span>
+            <span class="nt-desc">CSP · HTTPS · HSTS</span>
+          </div>
+          <span class="nav-badge done">OK</span>
+        </div>
+      </nav>
+    <div class="sidebar-footer">
+      
+        <div class="overall-score-bar">
+          <span class="osb-label">PROGRESO</span>
+          <div class="osb-track"><div class="osb-fill" id="progressFill" style="width:12%"></div></div>
+          <span class="osb-val" id="progressVal">12%</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace;">1 de 8 módulos aplicados</div>
+        <button class="btn-apply-all" onclick="generateFullReport()">✦ Generar reporte completo</button>
+      
+      <button class="btn-apply-all" onclick="generateFullReport()">✦ Generar reporte completo</button>
+    </div>
+  </aside>
+  <div class="content-area">
+
+      <!-- ── PANEL: CACHÉ & VELOCIDAD ── -->
+      <div class="optimizer-panel active" id="panel-cache">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>⚡ Caché & Velocidad de carga</h2>
+            <p>El caché convierte páginas dinámicas en archivos estáticos que el servidor entrega en milisegundos. Es la mejora con mayor impacto inmediato en TTFB y LCP.</p>
+          </div>
+          <div class="ph-score">
+            <div class="ps-num">38</div>
+            <div class="ps-label">score actual</div>
+            <div class="ps-tag" style="background:#FEF2F2; color:#EF4444;">CRÍTICO</div>
+          </div>
+        </div>
+        <div class="progress-strip">
+          <div class="ps-step done"><div class="ps-dot"></div> Diagnóstico</div>
+          <div class="ps-arrow">→</div>
+          <div class="ps-step active-s"><div class="ps-dot"></div> Implementación</div>
+          <div class="ps-arrow">→</div>
+          <div class="ps-step"><div class="ps-dot"></div> Verificación</div>
+          <div class="ps-arrow">→</div>
+          <div class="ps-step"><div class="ps-dot"></div> Completado</div>
+        </div>
+        <div class="panel-body">
+
+          <!-- Cache Headers -->
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">📦</div>
+              <div class="og-info">
+                <div class="ogi-title">Cache-Control headers en servidor</div>
+                <div class="ogi-sub">Indica al navegador cuánto tiempo guardar cada recurso localmente</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Sin Cache-Control, el navegador descarga todos los recursos en cada visita. Con estos headers, imágenes, CSS y JS se guardan localmente por 1 año — la segunda visita de un usuario carga hasta <strong>80% más rápido</strong>.</p>
+                <div class="impact-row">
+                  <div class="impact-stat"><div class="is-val">−800ms</div><div class="is-label">TTFB promedio</div></div>
+                  <div class="impact-stat"><div class="is-val">80%</div><div class="is-label">Menos peticiones en 2ª visita</div></div>
+                  <div class="impact-stat"><div class="is-val">+18pts</div><div class="is-label">PageSpeed estimado</div></div>
+                </div>
+                <div class="platform-tabs" style="margin-top:20px">
+                  <button class="pt-btn active" onclick="switchPlatform(this,'cache-nginx')">Nginx</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'cache-apache')">Apache</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'cache-shopify')">Shopify / CDN</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'cache-cloudflare')">Cloudflare</button>
+                </div>
+                <div class="platform-code active" id="cache-nginx">
+                  <div class="code-block">
+                    <div class="code-bar">
+                      <span class="cb-title">nginx.conf</span>
+                      <span class="cb-copy" onclick="copyCode(this)">Copiar</span>
+                    </div>
+                    <pre class="code-pre"><span class="c-comment"># Agregar dentro del bloque server{} en tu nginx.conf</span>
+
+<span class="c-tag">location</span> ~* \.(jpg|jpeg|png|gif|webp|svg|ico|css|js|woff2|woff|ttf)$ {
+    <span class="c-attr">expires</span>           <span class="c-val">1y</span>;
+    <span class="c-attr">add_header</span>        <span class="c-val">Cache-Control "public, immutable"</span>;
+    <span class="c-attr">add_header</span>        <span class="c-val">Vary "Accept-Encoding"</span>;
+    <span class="c-attr">access_log</span>        <span class="c-val">off</span>;
+}
+
+<span class="c-comment"># HTML: siempre revalidar (para que los cambios apliquen)</span>
+<span class="c-tag">location</span> ~* \.html$ {
+    <span class="c-attr">add_header</span>        <span class="c-val">Cache-Control "no-cache, must-revalidate"</span>;
+}</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="cache-apache">
+                  <div class="code-block">
+                    <div class="code-bar">
+                      <span class="cb-title">.htaccess</span>
+                      <span class="cb-copy" onclick="copyCode(this)">Copiar</span>
+                    </div>
+                    <pre class="code-pre"><span class="c-comment"># Pegar en tu archivo .htaccess (raíz del sitio)</span>
+
+&lt;<span class="c-tag">IfModule</span> mod_expires.c&gt;
+  ExpiresActive On
+  <span class="c-attr">ExpiresByType</span> image/webp              <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> image/jpeg              <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> image/png               <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> text/css                <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> application/javascript  <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> font/woff2              <span class="c-str">"access plus 1 year"</span>
+  <span class="c-attr">ExpiresByType</span> text/html               <span class="c-str">"access plus 0 seconds"</span>
+&lt;/<span class="c-tag">IfModule</span>&gt;
+
+&lt;<span class="c-tag">IfModule</span> mod_headers.c&gt;
+  &lt;<span class="c-tag">FilesMatch</span> "\.(jpg|jpeg|png|webp|css|js|woff2)$"&gt;
+    Header set Cache-Control <span class="c-str">"public, immutable"</span>
+  &lt;/<span class="c-tag">FilesMatch</span>&gt;
+&lt;/<span class="c-tag">IfModule</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="cache-shopify">
+                  <div class="code-block">
+                    <div class="code-bar">
+                      <span class="cb-title">Shopify (Liquid theme)</span>
+                      <span class="cb-copy" onclick="copyCode(this)">Copiar</span>
+                    </div>
+                    <pre class="code-pre"><span class="c-comment">{# Shopify gestiona caché de assets automáticamente via CDN Fastly.
+   Para maximizar el caché, asegúrate de usar asset_url y versionar: #}</span>
+
+<span class="c-comment">{% comment %} En layout/theme.liquid: {% endcomment %}</span>
+{{ <span class="c-str">'main.css'</span> | asset_url | stylesheet_tag }}
+<span class="c-comment">{# → Genera URL con hash: .../assets/main.css?v=1234 (cacheable 1 año) #}</span>
+
+<span class="c-comment">{# Para imágenes, siempre usar image_url con tamaño explícito: #}</span>
+&lt;<span class="c-tag">img</span>
+  <span class="c-attr">src</span>=<span class="c-str">"{{ product.featured_image | image_url: width: 800 }}"</span>
+  <span class="c-attr">loading</span>=<span class="c-str">"lazy"</span>
+  <span class="c-attr">width</span>=<span class="c-str">"800"</span>
+  <span class="c-attr">height</span>=<span class="c-str">"auto"</span>
+  <span class="c-attr">alt</span>=<span class="c-str">"{{ product.title }}"</span>
+&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="cache-cloudflare">
+                  <div class="code-block">
+                    <div class="code-bar">
+                      <span class="cb-title">Cloudflare (Page Rules)</span>
+                      <span class="cb-copy" onclick="copyCode(this)">Copiar</span>
+                    </div>
+                    <pre class="code-pre"><span class="c-comment"># En Cloudflare Dashboard → Rules → Page Rules → Create Rule</span>
+
+<span class="c-comment"># Regla 1: Cachear assets estáticos</span>
+<span class="c-attr">URL pattern</span>: *tudominio.com/assets/*
+<span class="c-attr">Setting</span>:     Cache Level → Cache Everything
+<span class="c-attr">Setting</span>:     Edge Cache TTL → 1 year
+<span class="c-attr">Setting</span>:     Browser Cache TTL → 1 year
+
+<span class="c-comment"># Regla 2: No cachear checkout ni carrito (ecommerce)</span>
+<span class="c-attr">URL pattern</span>: *tudominio.com/checkout*
+<span class="c-attr">Setting</span>:     Cache Level → Bypass
+
+<span class="c-comment"># También activar en Speed → Optimization:
+# ✓ Auto Minify (JS, CSS, HTML)
+# ✓ Brotli compression
+# ✓ HTTP/2
+# ✓ Early Hints</span></pre>
+                  </div>
+                </div>
+                <button class="btn-ai-explain" onclick="explainWithAI(this, 'cache-control')">✦ Explícame esto en detalle</button>
+                <div class="ai-explain-box"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GZIP/Brotli -->
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">🗜</div>
+              <div class="og-info">
+                <div class="ogi-title">Compresión Gzip / Brotli</div>
+                <div class="ogi-sub">Reduce el tamaño de transferencia de HTML, CSS y JS hasta un 80%</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Brotli (sucesor de Gzip) comprime texto hasta un <strong>26% más eficientemente</strong> que Gzip. Para un sitio con 500KB de HTML/CSS/JS, Brotli puede reducirlo a ~120KB. El impacto en LCP es inmediato.</p>
+                <div class="impact-row">
+                  <div class="impact-stat"><div class="is-val">−80%</div><div class="is-label">Tamaño de transferencia</div></div>
+                  <div class="impact-stat"><div class="is-val">−600ms</div><div class="is-label">Tiempo de carga estimado</div></div>
+                </div>
+                <div class="platform-tabs" style="margin-top:20px">
+                  <button class="pt-btn active" onclick="switchPlatform(this,'gzip-nginx')">Nginx</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'gzip-apache')">Apache</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'gzip-node')">Node.js</button>
+                </div>
+                <div class="platform-code active" id="gzip-nginx">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">nginx.conf</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment"># Dentro del bloque http{} en nginx.conf</span>
+
+<span class="c-attr">gzip</span>              <span class="c-val">on</span>;
+<span class="c-attr">gzip_vary</span>         <span class="c-val">on</span>;
+<span class="c-attr">gzip_min_length</span>   <span class="c-val">256</span>;
+<span class="c-attr">gzip_proxied</span>      <span class="c-val">any</span>;
+<span class="c-attr">gzip_comp_level</span>   <span class="c-val">6</span>;
+<span class="c-attr">gzip_types</span>
+  text/plain text/css text/xml text/javascript
+  application/javascript application/json
+  application/xml+rss image/svg+xml
+  font/woff2;
+
+<span class="c-comment"># Brotli (requiere módulo ngx_brotli compilado)</span>
+<span class="c-attr">brotli</span>            <span class="c-val">on</span>;
+<span class="c-attr">brotli_comp_level</span> <span class="c-val">6</span>;
+<span class="c-attr">brotli_types</span>      text/plain text/css application/javascript application/json font/woff2;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="gzip-apache">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">.htaccess</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre">&lt;<span class="c-tag">IfModule</span> mod_deflate.c&gt;
+  AddOutputFilterByType DEFLATE text/html text/css
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE font/woff2 image/svg+xml
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+&lt;/<span class="c-tag">IfModule</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="gzip-node">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">Node.js / Express</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment">// npm install compression</span>
+<span class="c-tag">const</span> compression = require(<span class="c-str">'compression'</span>);
+<span class="c-tag">const</span> express = require(<span class="c-str">'express'</span>);
+<span class="c-tag">const</span> app = express();
+
+<span class="c-comment">// Activar compresión antes de cualquier ruta</span>
+app.use(compression({ level: 6, threshold: 256 }));</pre>
+                  </div>
+                </div>
+                <button class="btn-ai-explain" onclick="explainWithAI(this, 'gzip-brotli')">✦ Explícame esto en detalle</button>
+                <div class="ai-explain-box"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preload LCP -->
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">🚀</div>
+              <div class="og-info">
+                <div class="ogi-title">Preload del elemento LCP</div>
+                <div class="ogi-sub">Indica al navegador que cargue primero el elemento más importante de la página</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>El LCP (Largest Contentful Paint) es la imagen o bloque de texto más grande visible al cargar. Si no le dices al navegador que lo priorice, lo descubrirá "tarde" — después de procesar todo el HTML. Con <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">rel="preload"</code> le damos una ventaja de 0.5 a 1.5 segundos.</p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">HTML &lt;head&gt;</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre"><span class="c-comment">&lt;!-- Pegar ANTES de cualquier otro link/script en el &lt;head&gt; --&gt;</span>
+
+<span class="c-comment">&lt;!-- Si el LCP es una imagen: --&gt;</span>
+&lt;<span class="c-tag">link</span>
+  <span class="c-attr">rel</span>=<span class="c-str">"preload"</span>
+  <span class="c-attr">as</span>=<span class="c-str">"image"</span>
+  <span class="c-attr">href</span>=<span class="c-str">"/img/hero-banner.webp"</span>
+  <span class="c-attr">fetchpriority</span>=<span class="c-str">"high"</span>
+&gt;
+
+<span class="c-comment">&lt;!-- Si el LCP es una fuente: --&gt;</span>
+&lt;<span class="c-tag">link</span>
+  <span class="c-attr">rel</span>=<span class="c-str">"preload"</span>
+  <span class="c-attr">as</span>=<span class="c-str">"font"</span>
+  <span class="c-attr">href</span>=<span class="c-str">"/fonts/brand-bold.woff2"</span>
+  <span class="c-attr">type</span>=<span class="c-str">"font/woff2"</span>
+  <span class="c-attr">crossorigin</span>
+&gt;
+
+<span class="c-comment">&lt;!-- Para Shopify, en layout/theme.liquid: --&gt;</span>
+&lt;<span class="c-tag">link</span>
+  <span class="c-attr">rel</span>=<span class="c-str">"preload"</span>
+  <span class="c-attr">as</span>=<span class="c-str">"image"</span>
+  <span class="c-attr">href</span>=<span class="c-str">"{{ section.settings.hero_image | image_url: width: 1200 }}"</span>
+  <span class="c-attr">fetchpriority</span>=<span class="c-str">"high"</span>
+&gt;</pre>
+                </div>
+                <button class="btn-ai-explain" onclick="explainWithAI(this, 'preload-lcp')">✦ Explícame esto en detalle</button>
+                <div class="ai-explain-box"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── PANEL: IMÁGENES ── -->
+      <div class="optimizer-panel" id="panel-images">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🖼 Optimización de imágenes</h2>
+            <p>Las imágenes representan el 60-70% del peso de una página típica de ecommerce. Aquí está el mayor potencial de mejora en velocidad sin cambiar el diseño.</p>
+          </div>
+          <div class="ph-score">
+            <div class="ps-num">45</div>
+            <div class="ps-label">score actual</div>
+            <div class="ps-tag" style="background:#FEF2F2; color:#EF4444;">CRÍTICO</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">🌐</div>
+              <div class="og-info">
+                <div class="ogi-title">Convertir imágenes a formato WebP</div>
+                <div class="ogi-sub">WebP es hasta 80% más liviano que JPG/PNG sin pérdida visual perceptible</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Un JPG de 2MB se convierte en un WebP de ~400KB con la misma calidad visual. Multiplicado por 20 imágenes en una página de colección, ahorras ~32MB de descarga por visitante. El soporte en navegadores modernos es del 97%.</p>
+                <div class="platform-tabs" style="margin-top:16px">
+                  <button class="pt-btn active" onclick="switchPlatform(this,'webp-html')">HTML/CSS</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'webp-shopify')">Shopify</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'webp-node')">Node.js</button>
+                </div>
+                <div class="platform-code active" id="webp-html">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">HTML — &lt;picture&gt; con fallback</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment">&lt;!-- Sirve WebP a browsers modernos, JPG como fallback --&gt;</span>
+&lt;<span class="c-tag">picture</span>&gt;
+  &lt;<span class="c-tag">source</span>
+    <span class="c-attr">srcset</span>=<span class="c-str">"/img/producto.webp"</span>
+    <span class="c-attr">type</span>=<span class="c-str">"image/webp"</span>
+  &gt;
+  &lt;<span class="c-tag">img</span>
+    <span class="c-attr">src</span>=<span class="c-str">"/img/producto.jpg"</span>
+    <span class="c-attr">alt</span>=<span class="c-str">"Descripción del producto"</span>
+    <span class="c-attr">width</span>=<span class="c-str">"800"</span>
+    <span class="c-attr">height</span>=<span class="c-str">"600"</span>
+    <span class="c-attr">loading</span>=<span class="c-str">"lazy"</span>
+  &gt;
+&lt;/<span class="c-tag">picture</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="webp-shopify">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">Shopify Liquid</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment">{# Shopify convierte a WebP automáticamente con image_url.
+   Siempre especifica width y agrega loading lazy: #}</span>
+
+&lt;<span class="c-tag">picture</span>&gt;
+  &lt;<span class="c-tag">source</span>
+    <span class="c-attr">srcset</span>=<span class="c-str">"{{ product.featured_image | image_url: width: 800, format: 'webp' }}"</span>
+    <span class="c-attr">type</span>=<span class="c-str">"image/webp"</span>
+  &gt;
+  &lt;<span class="c-tag">img</span>
+    <span class="c-attr">src</span>=<span class="c-str">"{{ product.featured_image | image_url: width: 800 }}"</span>
+    <span class="c-attr">alt</span>=<span class="c-str">"{{ product.featured_image.alt | escape }}"</span>
+    <span class="c-attr">width</span>=<span class="c-str">"800"</span>
+    <span class="c-attr">height</span>=<span class="c-str">"{{ 800 | divided_by: product.featured_image.aspect_ratio | round }}"</span>
+    <span class="c-attr">loading</span>=<span class="c-str">"lazy"</span>
+  &gt;
+&lt;/<span class="c-tag">picture</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="webp-node">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">Node.js (Sharp)</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment">// npm install sharp</span>
+<span class="c-tag">const</span> sharp = require(<span class="c-str">'sharp'</span>);
+<span class="c-tag">const</span> path = require(<span class="c-str">'path'</span>);
+
+<span class="c-tag">async function</span> convertToWebP(inputPath) {
+  <span class="c-tag">const</span> outputPath = inputPath.replace(/\.(jpg|jpeg|png)$/i, <span class="c-str">'.webp'</span>);
+  <span class="c-tag">await</span> sharp(inputPath)
+    .webp({ quality: 82, effort: 6 })
+    .toFile(outputPath);
+  console.log(<span class="c-str">`✓ Converted: ${path.basename(outputPath)}`</span>);
+}
+
+<span class="c-comment">// Conversión masiva de una carpeta</span>
+<span class="c-tag">const</span> glob = require(<span class="c-str">'glob'</span>);
+glob(<span class="c-str">'./public/images/**/*.{jpg,jpeg,png}'</span>, (err, files) => {
+  files.forEach(convertToWebP);
+});</pre>
+                  </div>
+                </div>
+                <button class="btn-ai-explain" onclick="explainWithAI(this, 'webp')">✦ Explícame esto en detalle</button>
+                <div class="ai-explain-box"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lazy Load -->
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">👁</div>
+              <div class="og-info">
+                <div class="ogi-title">Lazy Loading nativo de imágenes</div>
+                <div class="ogi-sub">Solo carga imágenes cuando el usuario está a punto de verlas</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Con <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">loading="lazy"</code> nativo del navegador, las imágenes fuera de pantalla no se descargan hasta que el usuario hace scroll. <strong>Reduce el peso inicial de la página hasta un 70%.</strong> No requiere JavaScript, funciona en todos los browsers modernos.</p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">HTML — Implementación</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre"><span class="c-comment">&lt;!-- IMPORTANTE: la imagen hero/LCP NO debe tener lazy --&gt;</span>
+&lt;<span class="c-tag">img</span> <span class="c-attr">src</span>=<span class="c-str">"hero.webp"</span> <span class="c-attr">fetchpriority</span>=<span class="c-str">"high"</span> <span class="c-attr">alt</span>=<span class="c-str">"Hero"</span>&gt;
+
+<span class="c-comment">&lt;!-- Todas las demás imágenes: agregar loading="lazy" --&gt;</span>
+&lt;<span class="c-tag">img</span>
+  <span class="c-attr">src</span>=<span class="c-str">"product-1.webp"</span>
+  <span class="c-attr">loading</span>=<span class="c-str">"lazy"</span>
+  <span class="c-attr">decoding</span>=<span class="c-str">"async"</span>
+  <span class="c-attr">width</span>=<span class="c-str">"400"</span>
+  <span class="c-attr">height</span>=<span class="c-str">"400"</span>
+  <span class="c-attr">alt</span>=<span class="c-str">"Producto 1"</span>
+&gt;
+
+<span class="c-comment">&lt;!-- Siempre incluir width y height para evitar Layout Shift (CLS) --&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── PANEL: CSS & JS ── -->
+      <div class="optimizer-panel" id="panel-css-js">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🧹 CSS & JavaScript</h2>
+            <p>Scripts y estilos mal cargados bloquean el render de la página. Estas técnicas eliminan el render-blocking y reducen el trabajo del navegador.</p>
+          </div>
+          <div class="ph-score">
+            <div class="ps-num">52</div>
+            <div class="ps-label">score actual</div>
+            <div class="ps-tag" style="background:#FFFBEB; color:#F59E0B;">MEJORAR</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">⏳</div>
+              <div class="og-info">
+                <div class="ogi-title">Defer y Async en scripts no críticos</div>
+                <div class="ogi-sub">Evita que JS bloquee la renderización del contenido visible</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Sin <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">defer</code> o <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">async</code>, cada script detiene completamente el render de la página mientras se descarga y ejecuta. Analytics, chat widgets, pixels de Meta y Google son los principales culpables. <strong>Diferirlos puede reducir el LCP hasta 1.5 segundos.</strong></p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">HTML — Script loading strategy</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre"><span class="c-comment">&lt;!-- ❌ ANTES: bloquea el render --&gt;</span>
+&lt;<span class="c-tag">script</span> <span class="c-attr">src</span>=<span class="c-str">"/js/analytics.js"</span>&gt;&lt;/<span class="c-tag">script</span>&gt;
+
+<span class="c-comment">&lt;!-- ✅ DEFER: descarga en paralelo, ejecuta después del HTML --&gt;</span>
+&lt;<span class="c-tag">script</span> <span class="c-attr">src</span>=<span class="c-str">"/js/analytics.js"</span> <span class="c-attr">defer</span>&gt;&lt;/<span class="c-tag">script</span>&gt;
+
+<span class="c-comment">&lt;!-- ✅ ASYNC: descarga en paralelo, ejecuta apenas esté listo --&gt;</span>
+&lt;<span class="c-tag">script</span> <span class="c-attr">src</span>=<span class="c-str">"/js/chat-widget.js"</span> <span class="c-attr">async</span>&gt;&lt;/<span class="c-tag">script</span>&gt;
+
+<span class="c-comment">&lt;!-- Pixel de Meta: retraso hasta interacción del usuario --&gt;</span>
+&lt;<span class="c-tag">script</span>&gt;
+  <span class="c-tag">function</span> loadMetaPixel() {
+    <span class="c-tag">if</span> (window._fbLoaded) <span class="c-tag">return</span>;
+    window._fbLoaded = <span class="c-val">true</span>;
+    <span class="c-comment">// ... código del pixel aquí</span>
+  }
+  [<span class="c-str">'scroll'</span>, <span class="c-str">'click'</span>, <span class="c-str">'touchstart'</span>].forEach(e =>
+    window.addEventListener(e, loadMetaPixel, { once: <span class="c-val">true</span> })
+  );
+&lt;/<span class="c-tag">script</span>&gt;</pre>
+                </div>
+                <button class="btn-ai-explain" onclick="explainWithAI(this, 'defer-async')">✦ Explícame esto en detalle</button>
+                <div class="ai-explain-box"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical CSS -->
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">✂️</div>
+              <div class="og-info">
+                <div class="ogi-title">Critical CSS inline (above the fold)</div>
+                <div class="ogi-sub">Renderiza el contenido visible sin esperar el CSS completo</div>
+              </div>
+              <span class="og-impact med">Impacto medio</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>El Critical CSS extrae solo los estilos necesarios para renderizar lo visible al cargar, los incluye inline en el <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">&lt;head&gt;</code>, y carga el CSS completo de forma diferida. El resultado: la página parece cargarse instantáneamente.</p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">HTML — Patrón Critical CSS</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre">&lt;<span class="c-tag">head</span>&gt;
+  <span class="c-comment">&lt;!-- 1. Critical CSS inline (extraído con la herramienta de abajo) --&gt;</span>
+  &lt;<span class="c-tag">style</span>&gt;
+    <span class="c-comment">/* Solo estilos visibles en el primer viewport */</span>
+    body{margin:0;font-family:sans-serif}
+    .header{background:#000;color:#fff;padding:16px}
+    .hero{min-height:60vh;display:flex;align-items:center}
+    <span class="c-comment">/* ... (extraer con: npx critical URL --inline) */</span>
+  &lt;/<span class="c-tag">style</span>&gt;
+
+  <span class="c-comment">&lt;!-- 2. CSS completo cargado de forma no bloqueante --&gt;</span>
+  &lt;<span class="c-tag">link</span>
+    <span class="c-attr">rel</span>=<span class="c-str">"preload"</span>
+    <span class="c-attr">href</span>=<span class="c-str">"/css/main.css"</span>
+    <span class="c-attr">as</span>=<span class="c-str">"style"</span>
+    <span class="c-attr">onload</span>=<span class="c-str">"this.onload=null;this.rel='stylesheet'"</span>
+  &gt;
+  &lt;<span class="c-tag">noscript</span>&gt;
+    &lt;<span class="c-tag">link</span> <span class="c-attr">rel</span>=<span class="c-str">"stylesheet"</span> <span class="c-attr">href</span>=<span class="c-str">"/css/main.css"</span>&gt;
+  &lt;/<span class="c-tag">noscript</span>&gt;
+&lt;/<span class="c-tag">head</span>&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── PANEL: FONTS ── -->
+      <div class="optimizer-panel" id="panel-fonts">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🔤 Optimización de tipografías</h2>
+            <p>Las fuentes de Google Fonts, Typekit o similares agregan requests externos que aumentan el TTFB. Self-hosting y preload eliminan esta latencia completamente.</p>
+          </div>
+          <div class="ph-score">
+            <div class="ps-num">61</div>
+            <div class="ps-label">score actual</div>
+            <div class="ps-tag" style="background:#FFFBEB; color:#F59E0B;">MEJORAR</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">📥</div>
+              <div class="og-info">
+                <div class="ogi-title">Self-hosting de fuentes + font-display: swap</div>
+                <div class="ogi-sub">Elimina la dependencia de Google Fonts y evita el FOUT (Flash of Unstyled Text)</div>
+              </div>
+              <span class="og-impact med">Impacto medio</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Cada llamada a Google Fonts requiere una conexión DNS + TCP adicional (~200ms de latencia). Hospedar las fuentes en tu propio servidor y usar <code style="background:var(--paper);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;">font-display: swap</code> muestra texto inmediatamente con la fuente del sistema mientras carga la tuya — eliminando el bloqueo visual.</p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">CSS — @font-face optimizado</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre"><span class="c-comment">/* 1. Descargar fuentes desde: https://gwfh.mranftl.com/fonts */</span>
+<span class="c-comment">/* 2. Subir archivos .woff2 a tu servidor */</span>
+<span class="c-comment">/* 3. Reemplazar @import de Google Fonts con: */</span>
+
+<span class="c-tag">@font-face</span> {
+  <span class="c-attr">font-family</span>:   <span class="c-str">'TuFuente'</span>;
+  <span class="c-attr">src</span>:           url(<span class="c-str">'/fonts/tu-fuente-regular.woff2'</span>) format(<span class="c-str">'woff2'</span>);
+  <span class="c-attr">font-weight</span>:   <span class="c-val">400</span>;
+  <span class="c-attr">font-style</span>:    <span class="c-val">normal</span>;
+  <span class="c-attr">font-display</span>:  <span class="c-val">swap</span>; <span class="c-comment">/* Muestra texto inmediatamente */</span>
+}
+
+<span class="c-tag">@font-face</span> {
+  <span class="c-attr">font-family</span>:   <span class="c-str">'TuFuente'</span>;
+  <span class="c-attr">src</span>:           url(<span class="c-str">'/fonts/tu-fuente-bold.woff2'</span>) format(<span class="c-str">'woff2'</span>);
+  <span class="c-attr">font-weight</span>:   <span class="c-val">700</span>;
+  <span class="c-attr">font-style</span>:    <span class="c-val">normal</span>;
+  <span class="c-attr">font-display</span>:  <span class="c-val">swap</span>;
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: CDN ── -->
+      <div class="optimizer-panel" id="panel-cdn">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🌐 CDN & Red global</h2>
+            <p>Un CDN sirve tu sitio desde servidores cercanos a cada visitante. Para América Latina, esto puede reducir la latencia de 800ms a menos de 50ms para usuarios en diferentes países.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">☁️</div>
+              <div class="og-info">
+                <div class="ogi-title">Configurar Cloudflare Free (CDN + Seguridad)</div>
+                <div class="ogi-sub">CDN global gratuito con 310+ PoPs, protección DDoS y optimizaciones automáticas</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Cloudflare en plan gratuito ofrece más que muchos CDN de pago: caché global, minificación automática, Brotli, HTTP/2, HTTP/3, protección DDoS y SSL gratuito. Para tiendas en Colombia, México, Perú — los PoPs de LATAM reducen drásticamente el tiempo de respuesta.</p>
+                <div class="checklist">
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Crear cuenta en cloudflare.com</span><span class="cl-effort">5 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Agregar tu dominio y cambiar los nameservers</span><span class="cl-effort">10 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Speed → Optimization → Activar Auto Minify (JS, CSS, HTML)</span><span class="cl-effort">2 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Speed → Optimization → Activar Brotli</span><span class="cl-effort">1 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Speed → Optimization → Activar Early Hints</span><span class="cl-effort">1 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Caching → Configuration → Cache Level: Standard</span><span class="cl-effort">1 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">SSL/TLS → Mode: Full (strict)</span><span class="cl-effort">1 min</span></div>
+                  <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-checkbox"></div><span class="cl-text">Network → Activar HTTP/2, HTTP/3 (QUIC), 0-RTT</span><span class="cl-effort">2 min</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: MOBILE ── -->
+      <div class="optimizer-panel" id="panel-mobile">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>📱 Optimización móvil</h2>
+            <p>El 73% de compras en ecommerce latinoamericano se inician desde móvil. Una experiencia móvil deficiente es ventas directamente perdidas.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">👆</div>
+              <div class="og-info">
+                <div class="ogi-title">Touch targets & botones accesibles</div>
+                <div class="ogi-sub">Botones CTA con área táctil mínima de 44×44px (estándar WCAG 2.5.5)</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Botones pequeños en móvil generan toques erróneos y frustración. El estándar WCAG requiere 44×44px mínimo de área táctil. En Shopify y ecommerce, el botón "Agregar al carrito" es el elemento más crítico — si es difícil de tocar, pierdes la conversión.</p>
+                <div class="code-block" style="margin-top:14px">
+                  <div class="code-bar"><span class="cb-title">CSS — Botones táctiles optimizados</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                  <pre class="code-pre"><span class="c-comment">/* Estándar mínimo para todos los elementos clicables en móvil */</span>
+<span class="c-tag">.btn, button, a, [role="button"]</span> {
+  <span class="c-attr">min-height</span>:      <span class="c-val">44px</span>;
+  <span class="c-attr">min-width</span>:       <span class="c-val">44px</span>;
+  <span class="c-attr">padding</span>:         <span class="c-val">12px 20px</span>;
+  <span class="c-attr">touch-action</span>:   <span class="c-val">manipulation</span>; <span class="c-comment">/* Elimina delay de 300ms en iOS */</span>
+  <span class="c-attr">-webkit-tap-highlight-color</span>: <span class="c-val">transparent</span>;
+}
+
+<span class="c-comment">/* Botón CTA principal: grande y visible */</span>
+<span class="c-tag">.btn-add-to-cart</span> {
+  <span class="c-attr">width</span>:           <span class="c-val">100%</span>;
+  <span class="c-attr">min-height</span>:      <span class="c-val">52px</span>;
+  <span class="c-attr">font-size</span>:       <span class="c-val">16px</span>; <span class="c-comment">/* ≥16px evita zoom automático en iOS */</span>
+  <span class="c-attr">font-weight</span>:     <span class="c-val">600</span>;
+  <span class="c-attr">border-radius</span>:   <span class="c-val">10px</span>;
+}
+
+<span class="c-comment">/* Tipografía mínima: ≥14px en móvil */</span>
+<span class="c-tag">@media (max-width: 768px)</span> {
+  <span class="c-tag">body</span> { <span class="c-attr">font-size</span>: <span class="c-val">15px</span>; }
+  <span class="c-tag">p, li, td</span> { <span class="c-attr">font-size</span>: <span class="c-val">14px</span>; <span class="c-attr">line-height</span>: <span class="c-val">1.65</span>; }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: SEO TÉCNICO ── -->
+      <div class="optimizer-panel" id="panel-seo-tech">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🔍 SEO Técnico</h2>
+            <p>Schema markup, meta tags y sitemap le dicen a Google exactamente qué es tu tienda y qué vende. Sin esto, dependes de que Google "adivine" — y casi siempre pierde.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">📋</div>
+              <div class="og-info">
+                <div class="ogi-title">Schema markup JSON-LD para productos</div>
+                <div class="ogi-sub">Habilita Rich Snippets en Google: precio, rating y disponibilidad en resultados de búsqueda</div>
+              </div>
+              <span class="og-impact high">Alto impacto</span>
+              <button class="og-toggle-btn" onclick="event.stopPropagation(); toggleOpt(this)">Activar</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <p>Los Rich Snippets aumentan el CTR orgánico hasta un <strong>30%</strong> — los usuarios ven precio, rating y disponibilidad directamente en Google antes de entrar. En Shopify, esto se agrega en el template de producto.</p>
+                <div class="platform-tabs" style="margin-top:16px">
+                  <button class="pt-btn active" onclick="switchPlatform(this,'schema-html')">HTML</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'schema-shopify')">Shopify Liquid</button>
+                </div>
+                <div class="platform-code active" id="schema-html">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">JSON-LD — Product Schema</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre">&lt;<span class="c-tag">script</span> <span class="c-attr">type</span>=<span class="c-str">"application/ld+json"</span>&gt;
+{
+  <span class="c-attr">"@context"</span>: <span class="c-str">"https://schema.org"</span>,
+  <span class="c-attr">"@type"</span>: <span class="c-str">"Product"</span>,
+  <span class="c-attr">"name"</span>: <span class="c-str">"Nombre del producto"</span>,
+  <span class="c-attr">"image"</span>: [<span class="c-str">"https://tutienda.com/img/producto.webp"</span>],
+  <span class="c-attr">"description"</span>: <span class="c-str">"Descripción del producto"</span>,
+  <span class="c-attr">"sku"</span>: <span class="c-str">"SKU-001"</span>,
+  <span class="c-attr">"brand"</span>: { <span class="c-str">"@type"</span>: <span class="c-str">"Brand"</span>, <span class="c-str">"name"</span>: <span class="c-str">"Tu Marca"</span> },
+  <span class="c-attr">"offers"</span>: {
+    <span class="c-str">"@type"</span>: <span class="c-str">"Offer"</span>,
+    <span class="c-str">"price"</span>: <span class="c-str">"99.90"</span>,
+    <span class="c-str">"priceCurrency"</span>: <span class="c-str">"COP"</span>,
+    <span class="c-str">"availability"</span>: <span class="c-str">"https://schema.org/InStock"</span>,
+    <span class="c-str">"url"</span>: <span class="c-str">"https://tutienda.com/products/nombre"</span>
+  },
+  <span class="c-attr">"aggregateRating"</span>: {
+    <span class="c-str">"@type"</span>: <span class="c-str">"AggregateRating"</span>,
+    <span class="c-str">"ratingValue"</span>: <span class="c-str">"4.8"</span>,
+    <span class="c-str">"reviewCount"</span>: <span class="c-str">"127"</span>
+  }
+}
+&lt;/<span class="c-tag">script</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="schema-shopify">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">Shopify — snippets/product-schema.liquid</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre">&lt;<span class="c-tag">script</span> <span class="c-attr">type</span>=<span class="c-str">"application/ld+json"</span>&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "image": {{ product.featured_image | image_url: width: 1200 | json }},
+  "description": {{ product.description | strip_html | json }},
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": {{ product.selected_or_first_available_variant.price | divided_by: 100.0 }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+    "url": {{ request.origin | append: product.url | json }}
+  }
+}
+&lt;/<span class="c-tag">script</span>&gt;
+
+<span class="c-comment">{# Incluir en templates/product.liquid: #}
+{# {% render 'product-schema' %} #}</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: SEGURIDAD ── -->
+      <div class="optimizer-panel" id="panel-security">
+        <div class="panel-header">
+          <div class="ph-left">
+            <h2>🔒 Seguridad & HTTP Headers</h2>
+            <p>Los headers de seguridad protegen a tus visitantes y aumentan el score de PageSpeed en Best Practices. Muchos sitios los ignoran — aquí está la implementación completa.</p>
+          </div>
+          <div class="ph-score">
+            <div class="ps-num">82</div>
+            <div class="ps-label">score actual</div>
+            <div class="ps-tag" style="background:#F0FDF4; color:#00B37E;">BUENO</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="opt-group">
+            <div class="og-header" onclick="toggleGroup(this)">
+              <div class="og-icon">🛡</div>
+              <div class="og-info">
+                <div class="ogi-title">Headers de seguridad HTTP esenciales</div>
+                <div class="ogi-sub">HSTS, X-Frame-Options, CSP básico, Referrer Policy</div>
+              </div>
+              <span class="og-impact med">Impacto medio</span>
+              <button class="og-toggle-btn enabled" onclick="event.stopPropagation(); toggleOpt(this)">Activado</button>
+            </div>
+            <div class="og-expand">
+              <div class="og-body">
+                <div class="platform-tabs">
+                  <button class="pt-btn active" onclick="switchPlatform(this,'sec-nginx')">Nginx</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'sec-apache')">Apache</button>
+                  <button class="pt-btn" onclick="switchPlatform(this,'sec-node')">Node.js</button>
+                </div>
+                <div class="platform-code active" id="sec-nginx">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">nginx.conf — Security headers</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment"># Dentro del bloque server{}</span>
+
+add_header Strict-Transport-Security <span class="c-str">"max-age=31536000; includeSubDomains; preload"</span> always;
+add_header X-Content-Type-Options     <span class="c-str">"nosniff"</span> always;
+add_header X-Frame-Options            <span class="c-str">"SAMEORIGIN"</span> always;
+add_header Referrer-Policy            <span class="c-str">"strict-origin-when-cross-origin"</span> always;
+add_header Permissions-Policy         <span class="c-str">"camera=(), microphone=(), geolocation=()"</span> always;
+add_header Content-Security-Policy
+  <span class="c-str">"default-src 'self'; script-src 'self' 'unsafe-inline' *.googletagmanager.com *.facebook.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: *; connect-src 'self' *.google-analytics.com"</span> always;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="sec-apache">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">.htaccess</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre">&lt;<span class="c-tag">IfModule</span> mod_headers.c&gt;
+  Header always set Strict-Transport-Security <span class="c-str">"max-age=31536000; includeSubDomains"</span>
+  Header always set X-Content-Type-Options <span class="c-str">"nosniff"</span>
+  Header always set X-Frame-Options <span class="c-str">"SAMEORIGIN"</span>
+  Header always set Referrer-Policy <span class="c-str">"strict-origin-when-cross-origin"</span>
+&lt;/<span class="c-tag">IfModule</span>&gt;</pre>
+                  </div>
+                </div>
+                <div class="platform-code" id="sec-node">
+                  <div class="code-block">
+                    <div class="code-bar"><span class="cb-title">Node.js (Helmet)</span><span class="cb-copy" onclick="copyCode(this)">Copiar</span></div>
+                    <pre class="code-pre"><span class="c-comment">// npm install helmet</span>
+<span class="c-tag">const</span> helmet = require(<span class="c-str">'helmet'</span>);
+app.use(helmet()); <span class="c-comment">// Activa todos los headers seguros automáticamente</span>
+
+<span class="c-comment">// O configuración manual:</span>
+app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true }));
+app.use(helmet.frameguard({ action: <span class="c-str">'sameorigin'</span> }));
+app.use(helmet.noSniff());</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+
+<!-- MODULES INFO -->
+<section class="features" id="modulos">
+  <div class="features-inner">
+    <div class="section-hed">
+      <h2>Qué analiza ShopScan Pro</h2>
+      <p>Diagnóstico completo + código listo para implementar. Diseñado para el mercado latinoamericano.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon" style="background:#ede9fe;color:#7c3aed">⚡</div><h3>Performance Técnica</h3><p>Core Web Vitals desde Google PageSpeed v5. Móvil y desktop por separado.</p><ul class="feat-list"><li>LCP, CLS, FID, FCP, TTFB</li><li>Oportunidades priorizadas</li><li>Código listo por plataforma</li></ul></div>
+      <div class="feat-card"><div class="feat-icon" style="background:#d1fae5;color:#059669">🔍</div><h3>SEO On-Page</h3><p>Meta tags, estructura, datos estructurados y Open Graph.</p><ul class="feat-list"><li>Title, description, H1, canonical</li><li>Schema.org / Rich Snippets</li><li>Open Graph para redes sociales</li></ul></div>
+      <div class="feat-card"><div class="feat-icon" style="background:#fee2e2;color:#dc2626">🎯</div><h3>Optimización CRO</h3><p>10 puntos críticos: desde CTA hasta políticas legales en footer.</p><ul class="feat-list"><li>Reviews, urgencia, métodos de pago</li><li>Chat, popup, buscador interno</li><li>Captación de leads</li></ul></div>
+      <div class="feat-card"><div class="feat-icon" style="background:#ede9fe;color:#7c3aed">📢</div><h3>Tracking & Paid Media</h3><p>Meta Pixel, GA4, Google Ads, TikTok y todos los eventos de conversión.</p><ul class="feat-list"><li>Meta Pixel + eventos ATC/Purchase</li><li>Google Analytics 4 y GTM</li><li>TikTok Pixel, Google Ads</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="how-inner">
+    <h2>Diagnóstico y solución en un solo lugar</h2>
+    <p class="how-sub">De la URL al código implementado, en cuatro pasos</p>
+    <div class="how-grid">
+      <div class="how-step"><div class="how-num">1</div><h3>Ingresa la URL</h3><p>Detectamos la plataforma automáticamente. Compatible con cualquier stack.</p></div>
+      <div class="how-step"><div class="how-num">2</div><h3>Análisis automático</h3><p>50+ factores en ~60 segundos. Resultados en tiempo real.</p></div>
+      <div class="how-step"><div class="how-num">3</div><h3>Selecciona módulos</h3><p>8 módulos con código listo para tu plataforma específica.</p></div>
+      <div class="how-step"><div class="how-num">4</div><h3>Genera el reporte PDF</h3><p>Reporte white-label para entregar al cliente listo para implementar.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot">
+    <div>
+      <div class="logo-name" style="color:#fff">ShopScan<span style="color:#e94560">Pro</span></div>
+      <div class="foot-agency">Desarrollado por LaFête América SAS</div>
+    </div>
+    <div class="foot-links">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#optimizador">Optimizador</a>
+      <a href="#modulos">Módulos</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Gauge animation
+window.addEventListener('load', () => {
+  const circ = 2 * Math.PI * 52;
+  const ring = document.getElementById('gaugeRing');
+  if (ring) setTimeout(() => ring.setAttribute('stroke-dasharray', (62/100*circ) + ' ' + (circ - 62/100*circ)), 300);
+});
+
+// Tabs (results)
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+function runDemo() {
+  document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+document.getElementById('urlInput').addEventListener('keypress', e => { if (e.key === 'Enter') runDemo(); });
+
+
+// ── PANEL SWITCHING ───────────────────────────────────────────
+function showPanel(id) {
+  document.querySelectorAll('.optimizer-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── TOGGLE GROUP EXPAND ───────────────────────────────────────
+function toggleGroup(header) {
+  const expand = header.nextElementSibling;
+  expand.classList.toggle('open');
+}
+
+// ── TOGGLE OPTIMIZATION ON/OFF ────────────────────────────────
+let enabledCount = 1;
+function toggleOpt(btn) {
+  const isEnabled = btn.classList.toggle('enabled');
+  btn.textContent = isEnabled ? 'Activado' : 'Activar';
+  enabledCount += isEnabled ? 1 : -1;
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.og-toggle-btn').length;
+  const pct = Math.round((enabledCount / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressVal').textContent = pct + '%';
+}
+
+// ── PLATFORM TABS ─────────────────────────────────────────────
+function switchPlatform(btn, targetId) {
+  const group = btn.closest('.opt-group') || btn.closest('.og-body');
+  const tabs = btn.parentElement.querySelectorAll('.pt-btn');
+  tabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = btn.closest('.og-body') || btn.closest('.optimizer-panel');
+  panel.querySelectorAll('.platform-code').forEach(c => {
+    c.classList.remove('active');
+    if (c.id === targetId) c.classList.add('active');
+  });
+}
+
+// ── COPY CODE ─────────────────────────────────────────────────
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('.code-pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+  const cb = item.querySelector('.cl-checkbox');
+  cb.textContent = item.classList.contains('checked') ? '✓' : '';
+}
+
+// ── AI EXPLAIN ────────────────────────────────────────────────
+const topicContext = {
+  'cache-control': 'Explica Cache-Control headers en términos simples para un dueño de tienda online. Menciona qué es el caché del navegador, por qué importa para la velocidad, y cómo estos headers le dicen al navegador cuánto guardar cada tipo de archivo. Sé conciso y práctico, máximo 3 párrafos.',
+  'gzip-brotli': 'Explica qué es la compresión Gzip y Brotli en términos simples para alguien no técnico. Usa una analogía cotidiana. Explica por qué Brotli es mejor y cuánto impacto real tiene en la velocidad. Máximo 2 párrafos.',
+  'preload-lcp': 'Explica qué es el LCP (Largest Contentful Paint) y por qué hacer preload de ese elemento mejora la puntuación de Google PageSpeed. Usa lenguaje accesible. Máximo 2 párrafos.',
+  'defer-async': 'Explica la diferencia entre defer y async en JavaScript para un dueño de tienda online. ¿Por qué los scripts de analytics y Facebook Pixel deben diferirse? ¿Qué pasa si no se hace? Máximo 2 párrafos.',
+  'webp': 'Explica qué es el formato WebP, por qué es superior a JPG/PNG para ecommerce, y cómo afecta la velocidad de la tienda. Menciona la compatibilidad con navegadores. Máximo 2 párrafos.',
+};
+
+async function explainWithAI(btn, topic) {
+  const box = btn.nextElementSibling;
+  if (box.classList.contains('open')) {
+    box.classList.remove('open');
+    btn.textContent = '✦ Explícame esto en detalle';
+    return;
+  }
+  box.classList.add('open');
+  box.innerHTML = '<span class="aeb-loading">✦ Generando explicación...</span>';
+  btn.textContent = '▲ Cerrar';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: 'Eres un experto en optimización web para ecommerce, explicando conceptos técnicos a dueños de tiendas online en América Latina. Usa lenguaje claro, analogías cotidianas cuando sea útil, y enfócate en el impacto práctico en ventas y experiencia de usuario. Responde siempre en español.',
+        messages: [{ role: 'user', content: topicContext[topic] || `Explica el concepto de ${topic} para optimización web en términos simples. Máximo 2 párrafos.` }]
+      })
+    });
+    const data = await res.json();
+    box.innerHTML = data.content?.[0]?.text?.replace(/\n/g, '<br>') || 'No se pudo generar la explicación.';
+  } catch (e) {
+    box.innerHTML = 'Error de conexión. Verifica tu red.';
+  }
+}
+
+// ── GENERATE FULL REPORT ──────────────────────────────────────
+function generateFullReport() {
+  const enabled = document.querySelectorAll('.og-toggle-btn.enabled').length;
+  const total = document.querySelectorAll('.og-toggle-btn').length;
+  alert(`✦ Reporte de optimización\n\n${enabled}/${total} optimizaciones activadas.\n\nEn la versión conectada, esto genera un PDF con el plan de implementación completo, priorizado por impacto, listo para entregar al cliente o al desarrollador.`);
+}
+
+</script>
+</body>
+</html>
